@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.1">
+  <object class="tk.Toplevel" id="mainWindow">
+    <property name="height">2000</property>
+    <property name="width">300</property>
+    <child>
+      <object class="tk.Entry" id="entry">
+        <property name="font">{Terminus} 16 {bold}</property>
+        <property name="validate">none</property>
+        <bind sequence="&lt;Return&gt;" handler="callback" add="" />
+        <layout manager="pack">
+          <property name="fill">x</property>
+          <property name="padx">3</property>
+          <property name="pady">3</property>
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="tk.Frame" id="listFrame">
+        <property name="height">10</property>
+        <property name="width">10</property>
+        <layout manager="pack">
+          <property name="fill">x</property>
+          <property name="propagate">True</property>
+          <property name="side">top</property>
+        </layout>
+        <child>
+          <object class="tk.Listbox" id="listbox">
+            <property name="activestyle">none</property>
+            <property name="justify">center</property>
+            <property name="takefocus">true</property>
+            <property name="width">33</property>
+            <bind sequence="&lt;Enter&gt;" handler="bla" add="True" />
+            <bind sequence="&lt;Key&gt;" handler="klavesnice" add="" />
+            <layout manager="pack">
+              <property name="expand">true</property>
+              <property name="fill">both</property>
+              <property name="propagate">True</property>
+              <property name="side">left</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Frame" id="btnFrame">
+            <property name="height">2</property>
+            <property name="relief">sunken</property>
+            <property name="width">2</property>
+            <layout manager="pack">
+              <property name="propagate">True</property>
+              <property name="side">left</property>
+            </layout>
+            <child>
+              <object class="tk.Button" id="btnUp">
+                <property name="font">TkDefaultFont</property>
+                <property name="takefocus">true</property>
+                <property name="text" translatable="yes">Up</property>
+                <property name="width">5</property>
+                <layout manager="pack">
+                  <property name="propagate">True</property>
+                  <property name="side">top</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Button" id="btnDown">
+                <property name="takefocus">true</property>
+                <property name="text" translatable="yes">Down</property>
+                <property name="width">5</property>
+                <layout manager="pack">
+                  <property name="propagate">True</property>
+                  <property name="side">top</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
