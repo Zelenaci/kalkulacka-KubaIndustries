@@ -79,66 +79,51 @@ class Application(tk.Tk):
         for i in range(0, pocet):
 
             if len(raw) == 0:
-                messagebox.showerror("Žrádlo", "Tohle nežeru.")
+                messagebox.showerror("Error", "Něco je špatně")
 
             else:
-                item = raw[i]
+                polozka = raw[i]
 
-                if item == "":
-                    messagebox.showerror("Žrádlo", "Tohle nežeru.")
+                if polozka == "":
+                    messagebox.showerror("Error", "Něco je špatně")
 
                 try:
-                    self.zasobnik.append(float(item))
+                    self.zasobnik.append(float(polozka))
 
                 except:
                     pass
 
-                if item.upper() == "Q":
+                if polozka.upper() == "Q":
                     self.quit()
 
-                if item.upper() == "PI":
+                if polozka.upper() == "PI":
                     self.listbox.insert(END, math.pi)
                     self.zasobnik.append(math.pi)
 
-                if item in self.dvoj_op.keys():
+                if polozka in self.dvoj_op.keys():
 
                     if len(self.zasobnik) >= 2:
 
                         b = self.zasobnik.pop()
                         a = self.zasobnik.pop()
-                        self.zasobnik.append(self.dvoj_op[item](a, b))
-                        self.listbox.insert(END, self.dvoj_op[item](a, b))
+                        self.zasobnik.append(self.dvoj_op[polozka](a, b))
+                        self.listbox.insert(END, self.dvoj_op[polozka](a, b))
 
-                    else:
-                        messagebox.showerror("Žrádlo", "Dal jsi mi toho málo mám ještě hlad.")
-                
-                if item in self.op.keys():
-
-                    if len(self.zasobnik) >= 1:
-
-                        a = self.zasobnik.pop()
-                        self.zasobnik.append(self.op[item](a))
-                        self.listbox.insert(END, self.op[item](a))
-
-                    else:
-                        messagebox.showerror("Žrádlo", "Nedal jsi mi nic ty hulváte jeden.")
-                self.listbox_reload()
-
-
+                    
 
     def up(self, event = None):
 
         if self.listbox.get(ACTIVE) != "":
 
-            item = self.listbox.curselection()[0]
-            self.zasobnik[item], self.zasobnik[item - 1] = self.zasobnik[item - 1], self.zasobnik[item]
+            polozka = self.listbox.curselection()[0]
+            self.zasobnik[polozka], self.zasobnik[polozka - 1] = self.zasobnik[polozka - 1], self.zasobnik[polozka]
             self.listbox_reload()
           
-            self.listbox.selection_set(item - 1)
-            self.listbox.activate(item - 1)
+            self.listbox.selection_set(polozka - 1)
+            self.listbox.activate(polozka - 1)
 
         else:
-            messagebox.showerror("Výběr", "Nic jsi nevybral ňoumo.")
+            messagebox.showerror("Volba", "Musíte něco vybrat")
 
 
 
@@ -146,15 +131,15 @@ class Application(tk.Tk):
 
         if self.listbox.get(ACTIVE) != "":
 
-            item = self.listbox.curselection()[0]
-            self.zasobnik[item], self.zasobnik[item + 1] = self.zasobnik[item + 1], self.zasobnik[item]
+            polozka = self.listbox.curselection()[0]
+            self.zasobnik[polozka], self.zasobnik[polozka + 1] = self.zasobnik[polozka + 1], self.zasobnik[polozka]
             self.listbox_reload()
           
-            self.listbox.selection_set(item + 1)
-            self.listbox.activate(item + 1) 
+            self.listbox.selection_set(polozka + 1)
+            self.listbox.activate(polozka + 1) 
 
         else:
-            messagebox.showerror("Výběr", "Nic jsi nevybral ňoumo.")           
+            messagebox.showerror("Volba", "Musítě něco vybrat")           
 
 
 
@@ -163,8 +148,8 @@ class Application(tk.Tk):
         self.var_field.set("")
         self.listbox.delete(0, END)
 
-        for item in self.zasobnik:
-            self.listbox.insert(END, item)
+        for polozka in self.zasobnik:
+            self.listbox.insert(END, polozka)
 
     
 
@@ -172,12 +157,12 @@ class Application(tk.Tk):
 
         if self.listbox.get(ANCHOR) != "":
 
-            item = self.listbox.curselection()[0]
-            self.zasobnik.pop(item)
+            polozka = self.listbox.curselection()[0]
+            self.zasobnik.pop(polozka)
             self.listbox_reload()
         
         else:
-            messagebox.showerror("Výběr", "Nic jsi nevybral ňoumo.")
+            messagebox.showerror("Výběr", "Musíte něco vybrat")
 
 
 
