@@ -1,92 +1,174 @@
-#!/usr/bin/env python3
-# Soubor:  kalkulacka.py
-# Datum:   28.03.2022 08:31
-# Autor:   Marek Nožka, nozka <@t> spseol <d.t> cz
-############################################################################
+import tkinter as tk
+from tkinter import ANCHOR, Frame, messagebox, Listbox, END, ACTIVE
+from os.path import basename, splitext
 import math
 
-zasobnik = []
 
 
-def operace(token):
-    if token.upper() == "Q":
-        exit()
-    if token.upper() == "PI":
-        zasobnik.append(math.pi)
-    if token == "+":
-        b = zasobnik.pop()
-        a = zasobnik.pop()
-        zasobnik.append(a + b)
-    if token == "-":
-        b = zasobnik.pop()
-        a = zasobnik.pop()
-        zasobnik.append(a - b)
-    if token == "*":
-        b = zasobnik.pop()
-        a = zasobnik.pop()
-        zasobnik.append(a * b)
-    if token == "**":
-        b = zasobnik.pop()
-        a = zasobnik.pop()
-        zasobnik.append(a ** b)
-    if token == "sin":
-        a = zasobnik.pop()
-        zasobnik.append(math.sin(a))
-    if token == "cos":
-        a = zasobnik.pop()
-        zasobnik.append(math.cos(a))
+class Application(tk.Tk):
+
+    nazev = basename(splitext(basename(__file__.capitalize()))[0])
+    nazev = "Kalkulačka absolut"
+    
 
 
-dva_operandy = {}
-dva_operandy["+"] = lambda a, b: a + b
-dva_operandy["-"] = lambda a, b: a - b
-dva_operandy["*"] = lambda a, b: a * b
-dva_operandy["/"] = lambda a, b: a / b
-dva_operandy["//"] = lambda a, b: a // b
-dva_operandy["**"] = lambda a, b: a ** b
+    def __init__(self):
 
-jeden_operand = {}
-jeden_operand["sin"] = math.sin
-jeden_operand["cos"] = math.cos
-jeden_operand["tg"] = math.tan
-jeden_operand["tan"] = math.tan
+        super().__init__(className=self.nazev)
+
+        self.title(self.nazev)
+        self.bind("<Escape>", self.quit)
+        self.protocol("WM_DELETE_WINDOW", self.quit)        
+        self.bind("<Return>", self.insert)
 
 
-def operace(token):
-    if token.upper() == "Q":
-        exit()
-    if token.upper() == "PI":
-        zasobnik.append(math.pi)
-    if token.upper() == "SW":
-        b = zasobnik.pop()
-        a = zasobnik.pop()
-        zasobnik.append(b)
-        zasobnik.append(a)
-    if token in dva_operandy.keys():
-        if len(zasobnik) >= 2:
-            b = zasobnik.pop()
-            a = zasobnik.pop()
-            zasobnik.append(dva_operandy[token](a, b))
+        self.var_field = tk.Variable()
+
+
+        self.entry_field = tk.Entry(self, textvariable = self.var_field, width = 40)
+        self.entry_field.grid(row = 1, column=1, columnspan = 4)
+        
+        self.listbox = Listbox(self, width = 30)
+        self.listbox.grid(row = 2, column = 1, pady = 25, columnspan = 4)
+        
+
+        self.frame = Frame(self)
+        self.frame.grid(row = 2, column = 5)
+
+        self.btn_up = tk.Button(self.frame, text = "↑", command = self.up, width = 12, border = 5, background = "#555555")
+        self.btn_up.pack()
+
+        self.btn_down = tk.Button(self.frame, text = "↓", command = self.down, width = 12, border = 5, background = "#555555")
+        self.btn_down.pack()
+
+
+        self.btn_del = tk.Button(self, text = "Smazat", command = self.del_zasobnik, width = 17, border = 5, background = "#FFFF00")
+        self.btn_del.grid(row = 4, column = 3)
+        
+        self.btn_quit = tk.Button(self, text = "Zavřít", command = self.quit, width = 17, border = 5, background = "#FF0000")
+        self.btn_quit.grid(row = 4, column = 4)
+
+
+        self.zasobnik = []
+        self.dvoj_op = {}
+        self.dvoj_op["+"] = lambda a, b: a + b
+        self.dvoj_op["-"] = lambda a, b: a - b
+        self.dvoj_op["*"] = lambda a, b: a * b
+        self.dvoj_op["/"] = lambda a, b: a / b
+        self.dvoj_op["//"] = lambda a, b: a // b
+        self.dvoj_op["**"] = lambda a, b: a ** b
+
+        self.op = {}
+        self.op["sin"] = math.sin
+        self.op["cos"] = math.cos
+        self.op["tg"] = math.tan
+        self.op["tan"] = math.tan
+
+
+
+    def insert(self, event = None):
+        
+        raw = self.var_field.get().split()
+
+        if len(raw) == 0:
+            pocet = 1
+
         else:
-            print("Nemám dost operandů!!!")
-    if token in jeden_operand.keys():
-        if len(zasobnik) >= 1:
-            a = zasobnik.pop()
-            zasobnik.append(jeden_operand[token](a))
+            pocet = len(raw)
+
+        for i in range(0, pocet):
+
+            if len(raw) == 0:
+                messagebox.showerror("Error", "Něco je špatně")
+
+            else:
+                polozka = raw[i]
+
+                if polozka == "":
+                    messagebox.showerror("Error", "Něco je špatně")
+
+                try:
+                    self.zasobnik.append(float(polozka))
+
+                except:
+                    pass
+
+                if polozka.upper() == "Q":
+                    self.quit()
+
+                if polozka.upper() == "PI":
+                    self.listbox.insert(END, math.pi)
+                    self.zasobnik.append(math.pi)
+
+                if polozka in self.dvoj_op.keys():
+
+                    if len(self.zasobnik) >= 2:
+
+                        b = self.zasobnik.pop()
+                        a = self.zasobnik.pop()
+                        self.zasobnik.append(self.dvoj_op[polozka](a, b))
+                        self.listbox.insert(END, self.dvoj_op[polozka](a, b))
+
+                    
+
+    def up(self, event = None):
+
+        if self.listbox.get(ACTIVE) != "":
+
+            polozka = self.listbox.curselection()[0]
+            self.zasobnik[polozka], self.zasobnik[polozka - 1] = self.zasobnik[polozka - 1], self.zasobnik[polozka]
+            self.listbox_reload()
+          
+            self.listbox.selection_set(polozka - 1)
+            self.listbox.activate(polozka - 1)
+
         else:
-            print("Nemám dost operandů!!!")
+            messagebox.showerror("Volba", "Musíte něco vybrat")
 
 
-def zpracuj(radek):
-    tokeny = radek.split()
-    for token in tokeny:
-        try:
-            zasobnik.append(float(token))
-        except ValueError:
-            operace(token)
+
+    def down(self, event = None):
+
+        if self.listbox.get(ACTIVE) != "":
+
+            polozka = self.listbox.curselection()[0]
+            self.zasobnik[polozka], self.zasobnik[polozka + 1] = self.zasobnik[polozka + 1], self.zasobnik[polozka]
+            self.listbox_reload()
+          
+            self.listbox.selection_set(polozka + 1)
+            self.listbox.activate(polozka + 1) 
+
+        else:
+            messagebox.showerror("Volba", "Musítě něco vybrat")           
 
 
-# čtu vstup
-while True:
-    radek = input(zasobnik.__repr__() + ">>> ")
-    zpracuj(radek)
+
+    def listbox_reload(self):
+
+        self.var_field.set("")
+        self.listbox.delete(0, END)
+
+        for polozka in self.zasobnik:
+            self.listbox.insert(END, polozka)
+
+    
+
+    def del_zasobnik(self):
+
+        if self.listbox.get(ANCHOR) != "":
+
+            polozka = self.listbox.curselection()[0]
+            self.zasobnik.pop(polozka)
+            self.listbox_reload()
+        
+        else:
+            messagebox.showerror("Výběr", "Musíte něco vybrat")
+
+
+
+    def quit(self, event = None):
+        super().quit()
+
+
+app = Application()
+app.mainloop()
